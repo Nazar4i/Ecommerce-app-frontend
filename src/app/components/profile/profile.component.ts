@@ -1,0 +1,31 @@
+import {Component, OnInit} from '@angular/core';
+import {UserService} from '../../services/user.service';
+import {Router} from '@angular/router';
+import {map} from 'rxjs/operators';
+import {AuthResponseModel} from '../../models/auth.model';
+
+@Component({
+  selector: 'app-profile',
+  templateUrl: './profile.component.html',
+  styleUrls: ['./profile.component.scss']
+})
+export class ProfileComponent implements OnInit {
+  public myUser: any;
+
+  constructor(private userService: UserService,
+              private router: Router) {
+  }
+
+  ngOnInit(): void {
+    this.userService.userData$.pipe(map((user: AuthResponseModel) => {
+          return user;
+        })
+      ).subscribe((data: AuthResponseModel) => {
+        this.myUser = data;
+      });
+  }
+
+  logout() {
+    this.userService.logout();
+  }
+}
